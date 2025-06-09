@@ -34,4 +34,27 @@ export class AuthService {
 
     return this.jwtService.sign({ userId: newUser._id });
   }
+
+  // Login: Validate password and return token
+  async login(username: string, password: string): Promise<string> {
+    const user = await this.userModel.findOne({ username });
+    if (!user) throw new Error('Invalid credentials');
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw new Error('Invalid credentials');
+
+    return this.jwtService.sign({ userId: user._id });
+  }
 }
+
+/*
+Function   	Kaam
+
+signup()	- Checks if username exists
+          - Hashes password
+          - Saves new user
+          - Returns token
+
+login()	- Fetches user by username
+        - Compares password
+        - Returns token if correct */

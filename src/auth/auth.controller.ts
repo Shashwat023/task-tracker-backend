@@ -9,37 +9,22 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  async signup(@Body() body: any, @Res() res: Response) {
-    const { username, password } = body;
-
-    // Hash the password
-    const hashedPassword = await this.authService.hashPassword(password);
-
-    // Save user to DB (we’ll add real DB later)
-    // For now, simulate success
-    const dummyUserId = '123abc';
-
-    // Create JWT token
-    const token = this.authService.generateToken(dummyUserId);
-
+async signup(@Body() body: any, @Res() res: Response) {
+  try {
+    const token = await this.authService.signup(body.username, body.password);
     return res.status(HttpStatus.CREATED).json({ token });
+  } catch (err) {
+    return res.status(HttpStatus.BAD_REQUEST).json({ error: err.message });
   }
+}
 
   @Post('login')
-  async login(@Body() body: any, @Res() res: Response) {
-    const { username, password } = body;
-
-    // Dummy logic to validate user (DB check aayega baad me)
-    const storedHash = await this.authService.hashPassword(password); // simulate existing hash
-    const isValid = await this.authService.validatePassword(password, storedHash);
-
-    if (!isValid) {
-      return res.status(HttpStatus.UNAUTHORIZED).json({ error: 'Invalid credentials' });
-    }
-
-    // Token
-    const token = this.authService.generateToken('123abc');
-
+async login(@Body() body: any, @Res() res: Response) {
+  try {
+    const token = await this.authService.login(body.username, body.password);
     return res.status(HttpStatus.OK).json({ token });
+  } catch (err) {
+    return res.status(HttpStatus.UNAUTHORIZED).json({ error: err.message });
   }
+}
 }
