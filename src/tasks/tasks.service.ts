@@ -26,7 +26,7 @@ export class TasksService {
 
   // Toggle completion - Flips completed value for a given task
   async toggleTask(userId: string, taskId: string) {
-    const task = await this.taskModel.findOne({ _id: taskId, userId });
+    const task = await this.taskModel.findOne({ _id: taskId, userId: new Types.ObjectId(userId) });
 
     if (!task) {
       return { error: 'Task not found or unauthorized' };

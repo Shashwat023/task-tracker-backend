@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost/taskdb'),
+    MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/test'),
     AuthModule, TasksModule],
   controllers: [],
   providers: [],
